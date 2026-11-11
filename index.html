@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>조선 유학 3대 사상가 핵심 철학 개념 단어장</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts & MaruBuri CDN -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_20-10-21@1.0/MaruBuri.css">
+    <style>
+        body {
+            font-family: 'MaruBuri', -apple-system, BlinkMacSystemFont, serif;
+            background-color: #f8fafc;
+            color: #0f172a;
+        }
+        .title-font { font-family: 'MaruBuri', serif; font-weight: 800; }
+        .hanja-font { font-family: 'MaruBuri', 'Nanum Myeongjo', serif; }
+        .keep-all { word-break: keep-all; }
+        
+        /* 커스텀 스크롤바 */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: rgba(241, 245, 249, 0.8); border-radius: 8px; }
+        ::-webkit-scrollbar-thumb { background: rgba(148, 163, 184, 0.6); border-radius: 8px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(100, 116, 139, 0.8); }
+
+        .card-enter { animation: cardPop 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        @keyframes cardPop {
+            from { opacity: 0; transform: translateY(12px) scale(0.985); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between p-3 sm:p-5 md:p-8">
+
+    <!-- 최상단 메인 헤더 -->
+    <header class="w-full max-w-5xl mx-auto mb-4 flex flex-wrap items-center justify-between gap-3 bg-white border border-slate-200/90 p-4 sm:p-5 rounded-2xl shadow-sm">
+        <div class="flex items-center gap-3">
+            <span class="text-3xl sm:text-4xl filter drop-shadow-sm">📜</span>
+            <div>
+                <span class="text-[11px] sm:text-xs font-black tracking-wider uppercase px-2.5 py-0.5 rounded-full bg-amber-50 text-amber-800 border border-amber-200">
+                    고등학교 윤리와 사상 · 한국 유학
+                </span>
+                <h1 class="title-font text-xl sm:text-2xl md:text-3xl text-slate-900 tracking-wide mt-1">
+                    조선 유학 3대 사상가 핵심 철학 단어장
+                </h1>
+            </div>
+        </div>
+
+        <!-- 뷰 모드 전환 및 사상가 필터 탭 -->
+        <div class="flex flex-wrap items-center gap-2">
+            <div class="inline-flex p-1 bg-slate-100 rounded-xl border border-slate-200" id="filter-tabs">
+                <button onclick="setFilter('ALL')" id="filter-ALL" class="px-3 py-1.5 rounded-lg text-xs sm:text-sm font-bold transition-all bg-amber-600 text-white shadow-sm">전체 (13)</button>
+                <button onclick="setFilter('이황')" id="filter-이황" class="px-3 py-1.5 rounded-lg text-xs sm:text-sm font-bold transition-all text-slate-600 hover:text-slate-900">이황 (4)</button>
+                <button onclick="setFilter('이이')" id="filter-이이" class="px-3 py-1.5 rounded-lg text-xs sm:text-sm font-bold transition-all text-slate-600 hover:text-slate-900">이이 (6)</button>
+                <button onclick="setFilter('정약용')" id="filter-정약용" class="px-3 py-1.5 rounded-lg text-xs sm:text-sm font-bold transition-all text-slate-600 hover:text-slate-900">정약용 (3)</button>
+            </div>
+            
+            <button onclick="toggleViewMode()" id="view-toggle-btn" class="px-3.5 py-2 bg-white hover:bg-slate-50 active:scale-95 text-slate-700 text-xs sm:text-sm font-bold rounded-xl border border-slate-300 flex items-center gap-1.5 transition-all shadow-sm">
+                <span id="view-icon">📋</span>
+                <span id="view-text">한눈에 표 보기</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- 메인 컨텐츠 영역 -->
+    <main class="w-full max-w-5xl mx-auto flex-1 flex flex-col justify-center">
+
+        <!-- [VIEW 1] 대형 낱말 카드 뷰 (기본) -->
+        <div id="card-view" class="w-full">
+            <div id="word-card" class="card-enter bg-white border border-slate-200/90 rounded-3xl p-6 sm:p-8 md:p-10 shadow-lg relative overflow-hidden flex flex-col justify-between min-h-[580px]">
+                <!-- 카드 상단: 사상가 태그 & 인덱스 인디케이터 -->
+                <div class="flex items-center justify-between border-b border-slate-100 pb-4 mb-6">
+                    <div class="flex items-center gap-2.5">
+                        <span id="scholar-badge" class="px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-black tracking-wide border shadow-xs">
+                            <!-- 사상가 명칭 삽입 -->
+                        </span>
+                        <span id="paradigm-tag" class="text-xs sm:text-sm font-semibold text-slate-500 hidden sm:inline">
+                            <!-- 사상가 핵심 기조 -->
+                        </span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span id="current-index" class="text-xs sm:text-sm font-extrabold px-3 py-1 bg-amber-50 text-amber-800 rounded-lg border border-amber-200">
+                            1 / 13
+                        </span>
+                    </div>
+                </div>
+
+                <!-- 카드 본문 -->
+                <div class="flex-1 flex flex-col justify-center py-2">
+                    <!-- 1. 핵심 단어 (한글 + 한자 초대형 타이포) -->
+                    <div class="text-center mb-7">
+                        <div class="inline-flex items-baseline flex-wrap justify-center gap-3 md:gap-4 mb-2">
+                            <h2 id="word-ko" class="text-4xl sm:text-5xl md:text-6xl font-black text-amber-700 tracking-tight">
+                                이통기국
+                            </h2>
+                            <span id="word-hanja" class="hanja-font text-2xl sm:text-3xl md:text-4xl font-extrabold text-slate-600">
+                                (理通氣局)
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- 2. 한자 낱글자 음과 뜻 (한 글자씩 직관적 분해 블록) -->
+                    <div class="mb-7">
+                        <div class="flex items-center gap-1.5 mb-2.5 justify-center sm:justify-start">
+                            <span class="text-amber-800 font-bold text-xs uppercase tracking-wider">🔤 한자 낱글자 음과 뜻</span>
+                            <span class="text-[11px] text-slate-500">(글자를 알면 사상이 보입니다)</span>
+                        </div>
+                        <div id="hanja-breakdown-grid" class="flex flex-wrap justify-center sm:justify-start gap-2.5">
+                            <!-- 낱글자 박스 동적 생성 -->
+                        </div>
+                    </div>
+
+                    <!-- 3. 글자 그대로의 뜻 (직역) -->
+                    <div class="mb-6 p-4 rounded-2xl bg-slate-50 border border-slate-200 flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
+                        <div class="flex items-center gap-1.5 flex-shrink-0">
+                            <span class="text-base sm:text-lg">🎯</span>
+                            <span class="text-xs sm:text-sm font-black text-emerald-800">글자 그대로의 뜻 (직역)</span>
+                        </div>
+                        <p id="word-literal" class="text-base sm:text-lg md:text-xl font-bold text-slate-900 keep-all">
+                            이(理)는 어디에나 두루 통하고, 기(氣)는 형태에 따라 국한(제한)된다.
+                        </p>
+                    </div>
+
+                    <!-- 4. 철학적 개념 상세 해설 -->
+                    <div class="p-5 sm:p-6 rounded-2xl bg-amber-50/50 border border-amber-200/80 shadow-xs">
+                        <div class="flex items-center gap-1.5 mb-2">
+                            <span class="text-base">💡</span>
+                            <span class="text-xs sm:text-sm font-black text-amber-900">시험에 나오는 철학적 개념 해설</span>
+                        </div>
+                        <p id="word-desc" class="text-sm sm:text-base md:text-lg text-slate-800 leading-relaxed keep-all font-medium">
+                            <!-- 상세 해설 동적 주입 -->
+                        </p>
+                    </div>
+                </div>
+
+                <!-- 카드 하단 내비게이션 바 -->
+                <div class="flex items-center justify-between border-t border-slate-100 pt-5 mt-6">
+                    <button onclick="prevWord()" class="px-5 sm:px-6 py-3 rounded-2xl bg-slate-100 hover:bg-slate-200 active:scale-95 text-slate-700 font-bold text-sm sm:text-base flex items-center gap-2 border border-slate-200 transition-all shadow-sm">
+                        <span>⬅️</span>
+                        <span>이전 단어</span>
+                        <span class="text-[11px] text-slate-500 hidden sm:inline">(◀)</span>
+                    </button>
+
+                    <div class="flex items-center gap-2">
+                        <button onclick="speakCurrentWord()" title="단어 음성으로 듣기" class="p-3 rounded-2xl bg-amber-50 hover:bg-amber-100 active:scale-95 text-amber-800 border border-amber-200 transition-all text-sm flex items-center gap-1 font-bold">
+                            <span>🔊</span>
+                            <span class="hidden sm:inline">단어 읽기</span>
+                        </button>
+                    </div>
+
+                    <button onclick="nextWord()" class="px-6 sm:px-7 py-3 rounded-2xl bg-amber-600 hover:bg-amber-700 active:scale-95 text-white font-black text-sm sm:text-base flex items-center gap-2 shadow-md shadow-amber-600/20 transition-all">
+                        <span>다음 단어</span>
+                        <span>➔</span>
+                        <span class="text-[11px] text-amber-200 hidden sm:inline">(▶)</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- [VIEW 2] 13대 핵심 어휘 한눈에 비교 마스터 테이블 뷰 -->
+        <div id="table-view" class="w-full hidden">
+            <div class="bg-white border border-slate-200 rounded-3xl p-5 sm:p-7 shadow-lg">
+                <div class="flex flex-wrap items-center justify-between gap-3 mb-5 pb-4 border-b border-slate-100">
+                    <div>
+                        <h2 class="text-xl sm:text-2xl font-black text-slate-900">13개 핵심 철학 어휘 마스터 비교표</h2>
+                        <p class="text-xs sm:text-sm text-slate-500 mt-0.5">행을 클릭하면 해당 단어의 큰 글자 상세 카드로 바로 이동합니다.</p>
+                    </div>
+                    <button onclick="toggleViewMode()" class="px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white font-black rounded-xl text-xs sm:text-sm transition-all flex items-center gap-1.5 shadow-sm">
+                        <span>🗂️</span> <span>대형 낱말 카드로 돌아가기</span>
+                    </button>
+                </div>
+
+                <div class="overflow-x-auto rounded-2xl border border-slate-200">
+                    <table class="w-full text-left text-xs sm:text-sm">
+                        <thead class="bg-slate-50 text-slate-700 font-black uppercase border-b border-slate-200">
+                            <tr>
+                                <th class="p-3.5 sm:p-4 w-12 text-center">No</th>
+                                <th class="p-3.5 sm:p-4">사상가</th>
+                                <th class="p-3.5 sm:p-4">개념어 (한자)</th>
+                                <th class="p-3.5 sm:p-4">한자 낱글자 풀이 및 직역</th>
+                                <th class="p-3.5 sm:p-4">핵심 철학적 의의</th>
+                            </tr>
+                        </thead>
+                        <tbody id="table-body" class="divide-y divide-slate-100 bg-white font-medium">
+                            <!-- 자바스크립트로 13개 데이터 자동 출력 -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- 사상가별 핵심 패러다임 3줄 요약 카드 -->
+                <div class="mt-5 p-4 sm:p-5 rounded-2xl bg-slate-50 border border-slate-200 text-xs sm:text-sm leading-relaxed space-y-2">
+                    <p class="font-black text-amber-900 flex items-center gap-1.5">
+                        <span>💡</span> <span>사상가별 핵심 패러다임 요약</span>
+                    </p>
+                    <p class="text-slate-700"><b class="text-rose-700">퇴계 이황 (엄격한 분리와 이(理)의 주재성):</b> 도덕 감정(사단)과 일상 감정(칠정)의 뿌리를 엄격히 분리하여 순수한 도덕성의 존엄을 지키려 함.</p>
+                    <p class="text-slate-700"><b class="text-cyan-800">율곡 이이 (포섭과 조화, 일상의 실천성):</b> 모든 감정은 현실의 에너지(기)에서 나오며, 이를 알맞게 조절(중절)하고 기질을 바로잡는(교기질) 실천을 강조함.</p>
+                    <p class="text-slate-700"><b class="text-emerald-800">다산 정약용 (도덕적 경향성과 주체적 책임):</b> 본성은 완성된 알맹이가 아니라 좋아하는 경향(성기호)이며, 인간은 자주지권으로 실천해야 사덕을 완성할 수 있음.</p>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- 하단 풋터 안내 -->
+    <footer class="w-full max-w-5xl mx-auto mt-4 text-center text-xs text-slate-400">
+        키보드 좌우 방향키(◀, ▶)로 단어를 넘길 수 있습니다. · 조선 유학 3대 사상가 핵심 철학 어휘집
+    </footer>
+
+    <!-- 자바스크립트 로직 -->
+    <script>
+        // 13대 핵심 철학 개념 전체 데이터베이스
+        const vocabularyData = [
+            // Ⅰ. 퇴계 이황
+            {
+                id: 1,
+                scholar: "이황",
+                scholarFullName: "퇴계 이황 (李滉)",
+                scholarColor: "rose",
+                paradigm: "도덕적 순수성과 이(理)의 주체성",
+                wordKo: "이귀기천",
+                wordHanja: "理貴氣賤",
+                letters: [
+                    { hanja: "理", kor: "다스릴/이치 리(이)" },
+                    { hanja: "貴", kor: "귀할 귀" },
+                    { hanja: "氣", kor: "기운 기" },
+                    { hanja: "賤", kor: "천할 천" }
+                ],
+                literal: "이(理)는 가치상 귀하고, 기(氣)는 상대적으로 천하다.",
+                philosophical: "우주의 보편적 원리이자 순수한 도덕 법칙인 '이(理)'를 가치론적으로 가장 높고 존귀하게 여기며, 감각적이고 물질적인 그릇인 '기(氣)'를 상대적으로 낮게 보는 관점입니다. 도덕적 순수성과 인간 이성의 주체성을 절대적으로 지키고자 한 이황 철학의 핵심 태도입니다."
+            },
+            {
+                id: 2,
+                scholar: "이황",
+                scholarFullName: "퇴계 이황 (李滉)",
+                scholarColor: "rose",
+                paradigm: "도덕 감정(사단)과 일상 감정(칠정)의 분리",
+                wordKo: "이기호발",
+                wordHanja: "理氣互發",
+                letters: [
+                    { hanja: "理", kor: "이치 리(이)" },
+                    { hanja: "氣", kor: "기운 기" },
+                    { hanja: "互", kor: "서로 호" },
+                    { hanja: "發", kor: "일어날/발할 발" }
+                ],
+                literal: "이(理)와 기(氣)가 각각 서로 발동한다.",
+                philosophical: "순수한 도덕 감정인 사단(四端)은 도덕 법칙인 이(理)가 발하고 기가 따른 것(이발기수)이고, 일상적 감정인 칠정(七情)은 물질적 기운인 기(氣)가 발하고 이가 탄 것(기발이승)이라는 학설입니다. 사단과 칠정의 근원이 서로 다르다고 보아 도덕 감정의 절대적 순선성을 수호하고자 했습니다."
+            },
+            {
+                id: 3,
+                scholar: "이황",
+                scholarFullName: "퇴계 이황 (李滉)",
+                scholarColor: "rose",
+                paradigm: "칠정(일반 감정)의 가변적 특성",
+                wordKo: "가선가악",
+                wordHanja: "可善可惡",
+                letters: [
+                    { hanja: "可", kor: "가능할 가" },
+                    { hanja: "善", kor: "착할 선" },
+                    { hanja: "可", kor: "가능할 가" },
+                    { hanja: "惡", kor: "악할 악" }
+                ],
+                literal: "선(善)해질 수도 있고, 악(惡)해질 수도 있다.",
+                philosophical: "이황이 일상 감정인 칠정(七情: 기쁨, 분노, 슬픔, 두려움 등)을 규정할 때 사용한 핵심 개념입니다. 사단은 언제나 순수하게 선한(순선) 감정인 반면, 칠정은 상황과 절도에 알맞게 조절되면 선이 되지만, 절도를 잃고 욕망에 치우치면 악으로 흐르기 쉽다는 특성을 의미합니다."
+            },
+            {
+                id: 4,
+                scholar: "이황",
+                scholarFullName: "퇴계 이황 (李滉)",
+                scholarColor: "rose",
+                paradigm: "성리학 내면 수양의 최고 공부법",
+                wordKo: "경",
+                wordHanja: "敬",
+                letters: [
+                    { hanja: "敬", kor: "공경할/삼갈 경" }
+                ],
+                literal: "몸과 마음을 삼가고 공경하여 흐트러짐 없이 다잡다.",
+                philosophical: "성리학에서 내면의 도덕성을 보존하기 위한 최고의 마음공부(수양법)입니다. 잡념을 버리고 마음을 하나로 집중하는 주일무적(主一無適), 옷차림과 용모를 단정히 하고 엄숙함을 유지하는 정제엄숙(整齊嚴肅), 정신을 항상 말똥말똥하게 깨어있게 하는 상성성(常惺惺)의 실천을 포괄합니다."
+            },
+
+            // Ⅱ. 율곡 이이
+            {
+                id: 5,
+                scholar: "이이",
+                scholarFullName: "율곡 이이 (李珥)",
+                scholarColor: "cyan",
+                paradigm: "이(理)와 기(氣)의 유기적 결합과 현실성",
+                wordKo: "이기지묘",
+                wordHanja: "理氣之妙",
+                letters: [
+                    { hanja: "理", kor: "이치 리(이)" },
+                    { hanja: "氣", kor: "기운 기" },
+                    { hanja: "之", kor: "어조사 지 (~의)" },
+                    { hanja: "妙", kor: "오묘할 묘" }
+                ],
+                literal: "이(理)와 기(氣)의 결합이 지극히 오묘하여 분리될 수 없다.",
+                philosophical: "이(理)와 기(氣)는 개념상 분명 둘이지만, 현실의 구체적 사물 속에서는 결코 떨어져서 따로 존재할 수 없다는 관계를 나타냅니다. '둘이면서 하나이고 하나이면서 둘'인 오묘한 유기적 어울림을 강조하여 관념적 도덕과 현실의 삶을 통합하였습니다."
+            },
+            {
+                id: 6,
+                scholar: "이이",
+                scholarFullName: "율곡 이이 (李珥)",
+                scholarColor: "cyan",
+                paradigm: "보편적 도덕성과 현실적 개별성의 조화",
+                wordKo: "이통기국",
+                wordHanja: "理通氣局",
+                letters: [
+                    { hanja: "理", kor: "이치 리(이)" },
+                    { hanja: "通", kor: "통할 통" },
+                    { hanja: "氣", kor: "기운 기" },
+                    { hanja: "局", kor: "판/국한될 국" }
+                ],
+                literal: "이(理)는 어디에나 두루 통하고, 기(氣)는 형태에 따라 국한(제한)된다.",
+                philosophical: "형체 없는 보편적 원리인 이(理)는 만물에 두루 통하여 똑같지만, 형체를 지닌 물질적 그릇인 기(氣)는 저마다 맑고 탁함, 크고 작음의 한계(국한)를 지닙니다. 세상 만물이 동일한 본성을 공유하면서도 현실에서 각양각색의 차이를 보이는 이유를 설명한 명제입니다."
+            },
+            {
+                id: 7,
+                scholar: "이이",
+                scholarFullName: "율곡 이이 (李珥)",
+                scholarColor: "cyan",
+                paradigm: "기의 발동과 이의 승선, 칠정포사단",
+                wordKo: "기발이승일도",
+                wordHanja: "氣發理乘一途",
+                letters: [
+                    { hanja: "氣", kor: "기운 기" },
+                    { hanja: "發", kor: "일어날 발" },
+                    { hanja: "理", kor: "이치 리(이)" },
+                    { hanja: "乘", kor: "탈 승" },
+                    { hanja: "一", kor: "한 일" },
+                    { hanja: "途", kor: "길 도" }
+                ],
+                literal: "기(氣)가 발동하고 이(理)가 기에 타는 오직 '하나의 길(一途)'만 존재한다.",
+                philosophical: "이황의 이기호발설을 정면으로 비판한 이이의 핵심 명제입니다. 현실 세계에서 스스로 움직이고 작용할 수 있는 것은 오직 물질적 에너지인 '기(氣)'뿐이며, 형체가 없는 '이(理)'는 기의 움직임에 실려 올라탈 뿐입니다. 따라서 도덕 감정이든 일반 감정이든 모든 마음의 발현 경로는 이것 하나뿐입니다."
+            },
+            {
+                id: 8,
+                scholar: "이이",
+                scholarFullName: "율곡 이이 (李珥)",
+                scholarColor: "cyan",
+                paradigm: "사단은 칠정 중 알맞게 조절된 감정",
+                wordKo: "중절",
+                wordHanja: "中節",
+                letters: [
+                    { hanja: "中", kor: "맞을/적중할 중" },
+                    { hanja: "節", kor: "마디/절도 절" }
+                ],
+                literal: "도덕적 절도(節)와 상황적 기준에 정확하게 들어맞다(中).",
+                philosophical: "『중용』에서 유래한 개념으로, 감정이 마땅한 때와 상황에 알맞게 발현되는 것을 의미합니다. 이이는 사단(도덕 감정)이 칠정과 따로 떨어진 신비한 감정이 아니라, '칠정 중에서 절도에 알맞게 조절된 것(칠정 중 중절한 정)'이 바로 사단이라고 보아 감정의 조절을 강조했습니다."
+            },
+            {
+                id: 9,
+                scholar: "이이",
+                scholarFullName: "율곡 이이 (李珥)",
+                scholarColor: "cyan",
+                paradigm: "수양의 완성을 이루는 진실한 열매",
+                wordKo: "성",
+                wordHanja: "誠",
+                letters: [
+                    { hanja: "誠", kor: "정성/진실할 성" }
+                ],
+                literal: "한 점의 거짓도 없이 참되고 지극히 정성스럽다.",
+                philosophical: "우주의 참된 실재이자 인간이 도달해야 할 지극한 인격의 완성 경지입니다. 율곡 이이는 학문과 수양을 시작하고 이끌어가는 요령이자 태도가 '경(敬)'이라면, 그 경을 지속적인 실천으로 갈고닦아 도달하는 완성된 실질과 알맹이는 바로 '성(誠)'이라고 보았습니다."
+            },
+            {
+                id: 10,
+                scholar: "이이",
+                scholarFullName: "율곡 이이 (李珥)",
+                scholarColor: "cyan",
+                paradigm: "혁구습과 능동적 실천을 통한 인격 변화",
+                wordKo: "교기질",
+                wordHanja: "矯氣質",
+                letters: [
+                    { hanja: "矯", kor: "바로잡을 교" },
+                    { hanja: "氣", kor: "기운 기" },
+                    { hanja: "質", kor: "바탕 질" }
+                ],
+                literal: "탁하고 편향된 기질(氣質)을 학문과 노력으로 올바르게 교정하다.",
+                philosophical: "사람은 저마다 타고난 기질에 맑고 탁함의 차이가 있습니다. 그러나 이이는 인간이 배움과 부단한 도덕적 실천을 통해 비뚤어진 기질과 나태한 습관(혁구습)을 바로잡음으로써 누구나 성인(聖人)의 경지에 이를 수 있다는 적극적인 실천적 인간관을 제시했습니다."
+            },
+
+            // Ⅲ. 다산 정약용
+            {
+                id: 11,
+                scholar: "정약용",
+                scholarFullName: "다산 정약용 (丁若鏞)",
+                scholarColor: "emerald",
+                paradigm: "선을 좋아하고 악을 부끄러워하는 본성",
+                wordKo: "영지의 기호",
+                wordHanja: "靈知之嗜好",
+                letters: [
+                    { hanja: "靈", kor: "신령할 영" },
+                    { hanja: "知", kor: "알 지" },
+                    { hanja: "之", kor: "어조사 지" },
+                    { hanja: "嗜", kor: "즐길 기" },
+                    { hanja: "好", kor: "좋아할 호" }
+                ],
+                literal: "신령스러운 지각 정신(영지)이 선(善)을 즐기고 좋아하는 성향.",
+                philosophical: "인간만이 지닌 고유한 도덕적 본성입니다. 정약용은 인간의 본성을 선천적으로 완성된 이치(성즉리)가 아니라 '선을 좋아하고 악을 부끄러워하는 마음의 경향성(기호)'으로 정의했습니다. 인간은 영지의 기호를 지녔기에 도덕적 행동을 행할 때 내면의 기쁨을 느낍니다."
+            },
+            {
+                id: 12,
+                scholar: "정약용",
+                scholarFullName: "다산 정약용 (丁若鏞)",
+                scholarColor: "emerald",
+                paradigm: "인간과 동물이 공유하는 생리적 욕구",
+                wordKo: "형구의 기호",
+                wordHanja: "形軀之嗜好",
+                letters: [
+                    { hanja: "形", kor: "모양 형" },
+                    { hanja: "軀", kor: "몸 구" },
+                    { hanja: "之", kor: "어조사 지" },
+                    { hanja: "嗜", kor: "즐길 기" },
+                    { hanja: "好", kor: "좋아할 호" }
+                ],
+                literal: "육체와 신체(형구)가 감각적 쾌락과 편안함을 즐기고 좋아하는 성향.",
+                philosophical: "인간과 동물이 공통으로 지닌 생리적·육체적 욕구입니다. 맛있는 음식을 먹고 싶어 하거나, 추위와 더위를 피하고 편안함을 추구하는 생물학적 경향성을 뜻합니다. 형구의 기호 자체는 죄가 아니지만, 절제하지 않고 이에만 탐닉하면 도덕적 타락으로 이어집니다."
+            },
+            {
+                id: 13,
+                scholar: "정약용",
+                scholarFullName: "다산 정약용 (丁若鏞)",
+                scholarColor: "emerald",
+                paradigm: "선악 선택의 자유의지와 주체적 책임",
+                wordKo: "자주지권",
+                wordHanja: "自主之權",
+                letters: [
+                    { hanja: "自", kor: "스스로 자" },
+                    { hanja: "主", kor: "주인 주" },
+                    { hanja: "之", kor: "어조사 지" },
+                    { hanja: "權", kor: "권세/권리 권" }
+                ],
+                literal: "자신의 행위에 대해 스스로 선택하고 결정하는 주체적 자유의지(권한).",
+                philosophical: "하늘이 오직 인간에게만 특별히 부여한 도덕적 자율권입니다. 인간은 선을 행할 수도 있고 악을 행할 수도 있는 자유로운 선택권이 있기 때문에, 선을 행했을 때의 칭찬(공로)도 악을 저질렀을 때의 비난(죄책)도 온전히 자기 자신이 감당해야 한다는 주체적 책임 윤리를 확립했습니다."
+            }
+        ];
+
+        let currentFilter = 'ALL';
+        let filteredList = [...vocabularyData];
+        let currentIndex = 0;
+        let isTableView = false;
+
+        // 필터링 적용
+        function setFilter(scholar) {
+            currentFilter = scholar;
+            
+            // 필터 탭 활성화 UI 갱신 (화이트 테마)
+            ['ALL', '이황', '이이', '정약용'].forEach(key => {
+                const btn = document.getElementById(`filter-${key}`);
+                if (!btn) return;
+                if (key === scholar) {
+                    btn.className = "px-3 py-1.5 rounded-lg text-xs sm:text-sm font-bold transition-all bg-amber-600 text-white shadow-sm";
+                } else {
+                    btn.className = "px-3 py-1.5 rounded-lg text-xs sm:text-sm font-bold transition-all text-slate-600 hover:text-slate-900";
+                }
+            });
+
+            if (scholar === 'ALL') {
+                filteredList = [...vocabularyData];
+            } else {
+                filteredList = vocabularyData.filter(item => item.scholar === scholar);
+            }
+
+            currentIndex = 0;
+            renderCard();
+            renderTable();
+        }
+
+        // 뷰 모드 토글 (카드 뷰 <-> 표 뷰)
+        function toggleViewMode() {
+            isTableView = !isTableView;
+            const cardView = document.getElementById('card-view');
+            const tableView = document.getElementById('table-view');
+            const viewIcon = document.getElementById('view-icon');
+            const viewText = document.getElementById('view-text');
+
+            if (isTableView) {
+                cardView.classList.add('hidden');
+                tableView.classList.remove('hidden');
+                viewIcon.innerText = "🗂️";
+                viewText.innerText = "낱말 카드 보기";
+            } else {
+                tableView.classList.add('hidden');
+                cardView.classList.remove('hidden');
+                viewIcon.innerText = "📋";
+                viewText.innerText = "한눈에 표 보기";
+                renderCard();
+            }
+        }
+
+        // 특정 단어로 점프
+        function jumpToWordById(id) {
+            // 필터가 걸려있어 해당 단어가 안 보일 수 있으므로 전체 필터로 해제
+            if (currentFilter !== 'ALL') {
+                setFilter('ALL');
+            }
+            const foundIdx = filteredList.findIndex(item => item.id === id);
+            if (foundIdx !== -1) {
+                currentIndex = foundIdx;
+            }
+            if (isTableView) {
+                toggleViewMode();
+            } else {
+                renderCard();
+            }
+        }
+
+        // 카드 뷰 렌더링
+        function renderCard() {
+            if (filteredList.length === 0) return;
+            const item = filteredList[currentIndex];
+
+            // 1. 사상가 배지 색상 및 스타일 (라이트 모드 고대비)
+            const badge = document.getElementById('scholar-badge');
+            const paradigm = document.getElementById('paradigm-tag');
+            const currentIdxElem = document.getElementById('current-index');
+
+            if (item.scholar === '이황') {
+                badge.className = "px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-black tracking-wide border border-rose-200 bg-rose-50 text-rose-800";
+            } else if (item.scholar === '이이') {
+                badge.className = "px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-black tracking-wide border border-cyan-200 bg-cyan-50 text-cyan-800";
+            } else {
+                badge.className = "px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-black tracking-wide border border-emerald-200 bg-emerald-50 text-emerald-800";
+            }
+            badge.innerText = item.scholarFullName;
+            paradigm.innerText = `· ${item.paradigm}`;
+            currentIdxElem.innerText = `${currentIndex + 1} / ${filteredList.length}`;
+
+            // 2. 단어 제목
+            document.getElementById('word-ko').innerText = item.wordKo;
+            document.getElementById('word-hanja').innerText = `(${item.wordHanja})`;
+
+            // 3. 한자 낱글자 풀이 블록 (라이트 모드 카드)
+            const grid = document.getElementById('hanja-breakdown-grid');
+            grid.innerHTML = item.letters.map(l => `
+                <div class="px-4 py-3 rounded-2xl bg-white border border-slate-200 shadow-sm flex items-center gap-2.5">
+                    <span class="hanja-font text-2xl sm:text-3xl font-black text-amber-700">${l.hanja}</span>
+                    <div class="flex flex-col">
+                        <span class="text-xs sm:text-sm font-extrabold text-slate-800">${l.kor}</span>
+                        <span class="text-[10px] text-slate-500">낱글자 훈음</span>
+                    </div>
+                </div>
+            `).join('');
+
+            // 4. 직역 및 상세 해설
+            document.getElementById('word-literal').innerText = item.literal;
+            document.getElementById('word-desc').innerText = item.philosophical;
+
+            // 재렌더링 애니메이션 리셋
+            const cardElem = document.getElementById('word-card');
+            cardElem.classList.remove('card-enter');
+            void cardElem.offsetWidth; // 트리거 리플로우
+            cardElem.classList.add('card-enter');
+        }
+
+        // 마스터 비교표 렌더링 (화이트 모드 고대비 적용)
+        function renderTable() {
+            const tbody = document.getElementById('table-body');
+            tbody.innerHTML = filteredList.map((item, idx) => {
+                let badgeClass = "bg-rose-50 text-rose-800 border-rose-200";
+                if (item.scholar === '이이') badgeClass = "bg-cyan-50 text-cyan-800 border-cyan-200";
+                if (item.scholar === '정약용') badgeClass = "bg-emerald-50 text-emerald-800 border-emerald-200";
+
+                const lettersSummary = item.letters.map(l => `${l.hanja}(${l.kor})`).join(', ');
+
+                return `
+                    <tr onclick="jumpToWordById(${item.id})" class="hover:bg-amber-50/60 cursor-pointer transition-colors group">
+                        <td class="p-3.5 sm:p-4 text-center font-bold text-slate-400 group-hover:text-amber-700">${idx + 1}</td>
+                        <td class="p-3.5 sm:p-4 whitespace-nowrap">
+                            <span class="px-2.5 py-1 rounded-lg text-xs font-black border ${badgeClass}">
+                                ${item.scholar}
+                            </span>
+                        </td>
+                        <td class="p-3.5 sm:p-4 font-black text-slate-900 group-hover:text-amber-700 whitespace-nowrap">
+                            <span class="text-base">${item.wordKo}</span>
+                            <span class="hanja-font text-xs text-slate-500 block">${item.wordHanja}</span>
+                        </td>
+                        <td class="p-3.5 sm:p-4">
+                            <p class="text-xs text-amber-800 font-semibold mb-1">${lettersSummary}</p>
+                            <p class="text-xs text-slate-700 font-medium">🎯 ${item.literal}</p>
+                        </td>
+                        <td class="p-3.5 sm:p-4 text-xs text-slate-700 leading-relaxed max-w-xs">
+                            ${item.philosophical}
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // 이전 단어
+        function prevWord() {
+            if (currentIndex > 0) {
+                currentIndex--;
+            } else {
+                currentIndex = filteredList.length - 1; // 순환
+            }
+            renderCard();
+        }
+
+        // 다음 단어
+        function nextWord() {
+            if (currentIndex < filteredList.length - 1) {
+                currentIndex++;
+            } else {
+                currentIndex = 0; // 순환
+            }
+            renderCard();
+        }
+
+        // 단어 발음 읽기 (Web Speech API TTS)
+        function speakCurrentWord() {
+            if (!('speechSynthesis' in window)) return;
+            const item = filteredList[currentIndex];
+            const textToSpeak = `${item.scholar}, ${item.wordKo}. ${item.literal}`;
+            const utterance = new SpeechSynthesisUtterance(textToSpeak);
+            utterance.lang = 'ko-KR';
+            utterance.rate = 0.9;
+            window.speechSynthesis.cancel();
+            window.speechSynthesis.speak(utterance);
+        }
+
+        // 키보드 좌우 화살표 탐색 지원
+        window.addEventListener('keydown', (e) => {
+            if (isTableView) return;
+            if (e.key === 'ArrowLeft') {
+                prevWord();
+            } else if (e.key === 'ArrowRight') {
+                nextWord();
+            }
+        });
+
+        // 초기 시작
+        window.onload = function() {
+            renderCard();
+            renderTable();
+        };
+    </script>
+</body>
+</html>
